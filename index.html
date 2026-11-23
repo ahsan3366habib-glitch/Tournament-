@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FF Tournament</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Poppins:wght@400;500;600&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--fire:#ff5a1f;--fire-d:#c2260c;--ember:#ffb020;--ink:#2a1210;--muted:#8a6f69;--glass:rgba(255,255,255,.58);--gb:rgba(255,255,255,.72);--bg1:#fff4e3;--bg2:#fde3d2;--bg3:#f9d6d8;--nav:rgba(255,255,255,.62);--field:rgba(255,255,255,.6);--sh:0 10px 34px rgba(120,30,10,.12),inset 0 1px 0 rgba(255,255,255,.85);--blur:blur(18px) saturate(165%);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--ink:#fbeee8;--muted:#c4a39a;--glass:rgba(40,18,16,.55);--gb:rgba(255,255,255,.14);--bg1:#1c0d0b;--bg2:#2a1210;--bg3:#1a0a12;--nav:rgba(40,18,16,.65);--field:rgba(255,255,255,.08);--sh:0 10px 34px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1)}}
+:root[data-theme="dark"]{--ink:#fbeee8;--muted:#c4a39a;--glass:rgba(40,18,16,.55);--gb:rgba(255,255,255,.14);--bg1:#1c0d0b;--bg2:#2a1210;--bg3:#1a0a12;--nav:rgba(40,18,16,.65);--field:rgba(255,255,255,.08);--sh:0 10px 34px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.1)}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{height:100%}
+body{min-height:100%;font-family:Poppins,'Hind Siliguri',sans-serif;color:var(--ink);background:linear-gradient(160deg,var(--bg1),var(--bg2) 50%,var(--bg3));background-attachment:fixed;padding-bottom:110px;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:-10%;z-index:-1;pointer-events:none;background:radial-gradient(420px 420px at 10% 10%,rgba(255,90,31,.30),transparent 70%),radial-gradient(460px 460px at 95% 40%,rgba(194,38,12,.22),transparent 70%),radial-gradient(420px 420px at 20% 92%,rgba(255,176,32,.32),transparent 70%)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none;touch-action:manipulation}
+svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
+h1,h2,h3,.num{font-family:Rajdhani,'Hind Siliguri',sans-serif}
+.glass{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--gb);box-shadow:var(--sh)}
+header{position:sticky;top:calc(10px + env(safe-area-inset-top,0px));z-index:30;margin:12px 4% 0;border-radius:26px;padding:10px 14px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:10px}
+.logo{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--ember),var(--fire) 55%,var(--fire-d));box-shadow:0 0 0 2px rgba(255,255,255,.85),0 6px 14px rgba(194,38,12,.35)}
+.brand h2{font-size:22px;line-height:1;color:var(--fire-d);letter-spacing:.5px}
+.brand small{font-size:10px;color:var(--muted);font-weight:500}
+.bal{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:30px;font-weight:600;font-size:13px;color:#fff;background:linear-gradient(135deg,var(--fire),var(--fire-d));box-shadow:0 8px 18px rgba(194,38,12,.32),inset 0 1px 0 rgba(255,255,255,.3)}
+.bal svg{width:16px;height:16px}
+main{padding:20px 4% 0;max-width:640px;margin:0 auto}
+.tab{display:none}.tab.on{display:block}
+.hero{border-radius:28px;padding:20px;margin-bottom:18px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-30px;top:-30px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(255,176,32,.55),transparent 70%)}
+.hero p{font-size:12px;color:var(--muted)}
+.hero h1{font-size:30px;line-height:1.05;margin:6px 0 14px;color:var(--fire-d)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:30px;padding:11px 20px;font-weight:600;font-size:13.5px;color:#fff;background:linear-gradient(135deg,var(--fire),var(--fire-d));box-shadow:0 8px 20px rgba(194,38,12,.32),inset 0 1px 0 rgba(255,255,255,.3);transition:transform .15s}
+.btn:active{transform:scale(.96)}
+.btn.ghost{color:var(--fire-d);background:var(--field);box-shadow:none;border:1px solid var(--gb)}
+.btn.done{background:linear-gradient(135deg,#2fb86b,#1b8a4b)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 14px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{padding:9px 16px;border-radius:22px;font-size:12.5px;font-weight:600;white-space:nowrap;background:var(--glass);border:1px solid var(--gb);color:var(--muted);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.chip.on{color:#fff;background:linear-gradient(135deg,var(--fire),var(--fire-d));border-color:transparent;box-shadow:0 6px 14px rgba(194,38,12,.3)}
+.sec{display:flex;justify-content:space-between;align-items:baseline;margin:6px 2px 10px}
+.sec h3{font-size:21px;color:var(--ink)}.sec span{font-size:12px;color:var(--muted)}
+.card{border-radius:24px;padding:16px;margin-bottom:14px}
+.top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.card h3{font-size:19px;line-height:1.15}
+.tags{display:flex;gap:6px;margin-top:7px;flex-wrap:wrap}
+.tag{font-size:10.5px;font-weight:600;padding:4px 10px;border-radius:12px;background:rgba(255,90,31,.12);color:var(--fire-d);border:1px solid rgba(255,90,31,.25)}
+.live{background:rgba(231,60,60,.14);border-color:rgba(231,60,60,.35);color:#d12a2a}
+.live::before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#d12a2a;margin-right:5px;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.25}}
+.prize{text-align:right}.prize small{font-size:10.5px;color:var(--muted);display:block}
+.prize b{font-family:Rajdhani;font-size:26px;color:var(--fire-d);line-height:1}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0 12px}
+.stat{padding:9px 6px;border-radius:16px;text-align:center;background:var(--field);border:1px solid var(--gb)}
+.stat small{display:block;font-size:10px;color:var(--muted)}.stat b{font-size:13px}
+.bar{height:7px;border-radius:9px;background:rgba(194,38,12,.14);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:9px;background:linear-gradient(90deg,var(--ember),var(--fire))}
+.slots{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:6px 2px 12px}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.wallet{border-radius:28px;padding:22px;margin-bottom:16px;color:#fff;background:linear-gradient(135deg,rgba(255,176,32,.9),rgba(255,90,31,.9) 50%,rgba(194,38,12,.92));border:1px solid rgba(255,255,255,.4);box-shadow:0 16px 36px rgba(194,38,12,.35),inset 0 1px 0 rgba(255,255,255,.5)}
+.wallet small{opacity:.85;font-size:12px}.wallet .num{font-size:42px;font-weight:700;line-height:1.1}
+.pay{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px 0 14px}
+.pay button{padding:14px;border-radius:20px;font-weight:600;font-size:14px;background:var(--field);border:1px solid var(--gb)}
+.pay button.on{border-color:var(--fire);box-shadow:0 0 0 3px rgba(255,90,31,.22)}
+.field{width:100%;padding:13px 16px;border:1px solid var(--gb);border-radius:16px;background:var(--field);color:var(--ink);outline:none;font-size:14px;margin-bottom:12px}
+.field:focus{border-color:var(--fire);box-shadow:0 0 0 4px rgba(255,90,31,.2)}
+.tx{display:flex;justify-content:space-between;align-items:center;padding:13px 16px;border-radius:20px;margin-bottom:10px;font-size:13px}
+.tx small{display:block;color:var(--muted);font-size:11px}
+.plus{color:#1b8a4b;font-weight:600}.minus{color:#d12a2a;font-weight:600}
+.me{text-align:center;border-radius:28px;padding:24px 18px;margin-bottom:16px}
+.avatar{width:84px;height:84px;margin:0 auto 10px;border-radius:50%;display:grid;place-items:center;font:700 30px Rajdhani;color:#fff;background:linear-gradient(135deg,var(--ember),var(--fire-d));box-shadow:0 0 0 3px rgba(255,255,255,.85),0 10px 22px rgba(194,38,12,.35)}
+.me small{color:var(--muted);font-size:12px}
+.toast{position:fixed;left:50%;bottom:calc(104px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);padding:11px 20px;border-radius:24px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:.3s;z-index:200;white-space:nowrap}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+nav{position:fixed;bottom:calc(12px + env(safe-area-inset-bottom,0px));left:14px;right:14px;max-width:520px;margin:0 auto;z-index:100;display:flex;padding:7px;border-radius:30px;background:var(--nav);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border:1px solid var(--gb);box-shadow:0 14px 40px rgba(120,30,10,.22),inset 0 1px 0 rgba(255,255,255,.4)}
+nav button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 4px;border-radius:22px;font-size:10.5px;font-weight:600;color:var(--muted);transition:.25s}
+nav button.on{color:#fff;background:linear-gradient(135deg,var(--fire),var(--fire-d));box-shadow:0 8px 18px rgba(194,38,12,.38),inset 0 1px 0 rgba(255,255,255,.3)}
+:focus-visible{outline:2px solid var(--fire);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[hidden]{display:none!important}
+@keyframes cin{from{opacity:0;transform:translateY(24px) scale(.97)}}@keyframes tin{from{opacity:0;transform:translateX(26px)}}@keyframes pop{from{opacity:0;transform:scale(.86) translateY(24px)}}@keyframes fade{from{opacity:0}}@keyframes hin{from{opacity:0;transform:translateY(-24px)}}
+header{animation:hin .7s cubic-bezier(.2,.8,.2,1) both}.tab.on,#aapp{animation:tin .6s cubic-bezier(.2,.8,.2,1) both}.auth{animation:fade .45s ease both}.box{animation:pop .65s cubic-bezier(.2,.9,.3,1.15) both}
+.card,.tx,.chip{animation:cin .7s cubic-bezier(.2,.8,.2,1) both}
+#list>:nth-child(2),#mine>:nth-child(2),#txs>:nth-child(2),#rqs>:nth-child(2),#abody>:nth-child(2){animation-delay:.1s}#list>:nth-child(3),#mine>:nth-child(3),#txs>:nth-child(3),#abody>:nth-child(3){animation-delay:.2s}#list>:nth-child(n+4),#abody>:nth-child(n+4){animation-delay:.3s}
+.chip:nth-child(2){animation-delay:.05s}.chip:nth-child(3){animation-delay:.1s}.chip:nth-child(4){animation-delay:.15s}.chip:nth-child(5){animation-delay:.2s}
+.bk{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;margin-right:8px;background:var(--field);border:1px solid var(--gb);color:var(--fire-d);animation:fade .4s both}.bk:active{transform:scale(.9)}.brand{margin-right:auto}
+.dots{display:flex;justify-content:center;gap:6px;margin:-2px 0 14px}.dots i{width:7px;height:7px;border-radius:9px;background:rgba(194,38,12,.25);transition:all .5s}.dots i.on{width:22px;background:var(--fire)}.sl small{display:block;font:500 13px Poppins;opacity:.92;margin-top:4px}
+.logo img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.auth{position:fixed;inset:0;z-index:150;display:grid;place-items:center;padding:20px;background:rgba(40,10,5,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}.avatar img{width:100%;height:100%;border-radius:50%;object-fit:cover}
+.box{width:100%;max-width:400px;border-radius:30px;padding:26px 22px;text-align:center}
+.box .logo{margin:0 auto 10px;width:64px;height:64px}.box h1{font-size:30px;color:var(--fire-d)}.box p{font-size:12px;color:var(--muted);margin:2px 0 16px}
+.seg{display:flex;padding:4px;border-radius:24px;background:var(--field);border:1px solid var(--gb);margin-bottom:14px}
+.seg button{flex:1;padding:9px;border-radius:20px;font-weight:600;font-size:13px;color:var(--muted)}.seg button.on{color:#fff;background:linear-gradient(135deg,var(--fire),var(--fire-d))}
+select.field{appearance:none;-webkit-appearance:none}
+.slider{overflow:hidden;border-radius:26px;margin-bottom:12px;box-shadow:var(--sh)}
+.trk{display:flex;transition:transform .9s cubic-bezier(.6,.05,.2,1)}.sl{min-width:100%;height:150px;display:grid;place-items:center;background:linear-gradient(135deg,var(--ember),var(--fire),var(--fire-d));color:#fff;font:700 26px Rajdhani;text-align:center}.sl img{width:100%;height:100%;object-fit:cover}
+.notice{border-radius:20px;padding:9px 14px;margin-bottom:16px;display:flex;gap:10px;align-items:center;overflow:hidden;font-size:13px}
+.notice span{white-space:nowrap;display:inline-block;padding-left:100%;animation:mq 16s linear infinite}@keyframes mq{to{transform:translateX(-100%)}}
+.room{margin-top:12px;padding:12px;border-radius:16px;background:var(--field);border:1px dashed var(--fire);font-size:13px}
+.room b{font-family:Rajdhani;font-size:17px;color:var(--fire-d)}.room.w{color:var(--muted);text-align:center;font-size:12px}
+.lbl{font-size:12px;color:var(--muted);margin:2px 2px 6px;display:block}
+.sm{padding:7px 12px;font-size:12px}.btn.red{background:linear-gradient(135deg,#e04b4b,#a81c1c)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:8px}.st{font-size:11px;font-weight:600;padding:3px 9px;border-radius:10px}
+.st.p{background:rgba(255,176,32,.25);color:#a86a00}.st.a{background:rgba(47,184,107,.2);color:#1b8a4b}.st.r{background:rgba(231,60,60,.18);color:#d12a2a}
+
+.lopt{width:100%;display:flex;justify-content:space-between;align-items:center;padding:14px 18px;margin-bottom:10px;border-radius:20px;font-weight:600;font-size:15px;background:var(--field);border:1.5px solid var(--gb);color:var(--ink);transition:.2s}
+.lopt i{font-style:normal;opacity:0;font-weight:700}.lopt.on{border-color:var(--fire);box-shadow:0 0 0 3px rgba(255,90,31,.22)}.lopt.on i{opacity:1;color:var(--fire-d)}
+.why{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}.why .card{margin:0;padding:14px;text-align:left}.why .ic{font-size:26px;line-height:1}
+.why h4{font:700 16px Rajdhani,'Hind Siliguri',sans-serif;color:var(--fire-d);margin:7px 0 4px}.why small{display:block;color:var(--muted);font-size:11.5px;line-height:1.5}
+.lnk{display:block;margin:-4px auto 12px;font-size:12.5px;font-weight:600;color:var(--fire-d)}
+
+.fab{position:fixed;right:16px;bottom:calc(96px + env(safe-area-inset-bottom,0px));z-index:90;width:54px;height:54px;border-radius:50%;display:grid;place-items:center;color:#fff;background:linear-gradient(135deg,var(--fire),var(--fire-d));box-shadow:0 10px 24px rgba(194,38,12,.4),inset 0 1px 0 rgba(255,255,255,.3);transition:transform .15s}.fab:active{transform:scale(.92)}.fab svg{width:26px;height:26px}
+.sb{display:flex;align-items:center;gap:12px;width:100%;padding:13px 18px;margin-bottom:10px;border-radius:20px;color:#fff;font-weight:600;font-size:15px;text-decoration:none;box-shadow:0 8px 18px rgba(0,0,0,.18);transition:transform .15s}.sb:active{transform:scale(.97)}.sb b{font-size:22px;line-height:1}
+</style>
+</head>
+<body>
+<div id="auth" class="auth" hidden><div class="box glass"><p id="amsg" style="display:none;color:var(--fire-d);font-weight:600;font-size:13px"></p>
+ <div class="logo lg0"></div><h1>FF Tournament</h1><p data-i="tag">Play. Win. Earn.</p>
+ <div class="seg" id="sgm"><button id="bli" class="on" onclick="am('li')" data-i="login">Login</button><button id="bsu" onclick="am('su')" data-i="signup">Sign Up</button></div>
+ <div id="sg" hidden><input class="field" id="anm" data-ph="name" placeholder="Name"><input class="field" id="afu" data-ph="ffuid" placeholder="FF UID"></div>
+ <input class="field" id="aph" inputmode="tel" data-ph="phone" placeholder="Phone">
+ <input class="field" id="apw" type="password" data-ph="pass" placeholder="Password">
+ <div id="fpx" hidden><input class="field" id="afp" data-ph="ffuid" placeholder="FF UID"><p data-i="fphint" style="margin:0 0 12px"></p></div>
+ <button class="lnk" id="fpl" onclick="am('fp')" data-i="forgot">Forgot password?</button>
+ <button class="btn" style="width:100%;margin-bottom:12px" id="abt" onclick="auth()"></button>
+ <select class="field lgs" onchange="setLang(this.value)" style="margin:0 0 10px"><option value="bn">বাংলা</option><option value="en">English</option></select><button class="btn sm ghost" onclick="$('auth').hidden=true">✕ Close</button><button class="lnk" id="fpb" hidden onclick="am('li')" style="margin:12px auto 0" data-i="backl">Back</button>
+</div></div>
+
+<div id="shell" hidden>
+<header class="glass"><button class="bk" id="bk" onclick="back()" hidden aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="brand"><div class="logo lg0"></div><div><h2>FF Tournament</h2><small id="who"></small></div></div>
+ <div class="bal" id="hb" hidden><span id="balTop"></span></div><button class="btn sm" id="hl" onclick="need('')">Login / Sign Up</button></header>
+<main>
+<div id="uapp">
+<section class="tab on" id="home">
+ <div class="slider"><div class="trk" id="trk"></div></div><div class="dots" id="dots"></div>
+ <div class="notice glass"><svg viewBox="0 0 24 24" style="width:18px;height:18px"><path d="M4 10v4h3l5 4V6L7 10zM16 9a4 4 0 0 1 0 6"/></svg><div style="overflow:hidden;flex:1"><span id="nt"></span></div></div>
+ <div class="chips" id="modes"></div>
+ <div class="sec"><h3 data-i="upc">Upcoming</h3><span id="cnt"></span></div><div id="list"></div>
+ <div class="sec" style="margin-top:22px"><h3 data-i="why">Why us?</h3></div>
+ <div class="why">
+  <div class="card glass"><div class="ic">🏆</div><h4 data-i="w1t"></h4><small data-i="w1d"></small></div>
+  <div class="card glass"><div class="ic">💰</div><h4 data-i="w2t"></h4><small data-i="w2d"></small></div>
+  <div class="card glass"><div class="ic">🔐</div><h4 data-i="w3t"></h4><small data-i="w3d"></small></div>
+  <div class="card glass"><div class="ic">🎮</div><h4 data-i="w4t"></h4><small data-i="w4d"></small></div>
+  <div class="card glass"><div class="ic">⚖️</div><h4 data-i="w5t"></h4><small data-i="w5d"></small></div>
+  <div class="card glass"><div class="ic">📱</div><h4 data-i="w6t"></h4><small data-i="w6d"></small></div>
+ </div>
+</section>
+<section class="tab" id="matches"><div class="sec"><h3 data-i="mym">My Matches</h3></div><div id="mine"></div></section>
+<section class="tab" id="wallet">
+ <div class="wallet"><small data-i="cb">Current Balance</small><div class="num" id="balBig"></div></div>
+ <div class="seg"><button id="wa" class="on" onclick="wm('a')" data-i="addm">Add Money</button><button id="ww" onclick="wm('w')" data-i="wdr">Withdraw</button></div>
+ <div class="card glass"><div class="pay" id="pays"></div><div id="pinfo" class="room" style="margin:0 0 12px"></div>
+  <input class="field" id="amt" type="number" inputmode="numeric" data-ph="amt" placeholder="Amount">
+  <input class="field" id="trx" data-ph="trx" placeholder="TrxID">
+  <button class="btn" style="width:100%" onclick="req()" data-i="sub">Submit</button></div>
+ <div class="sec"><h3 data-i="rq">Requests</h3></div><div id="rqs"></div>
+ <div class="sec"><h3 data-i="hist">History</h3></div><div id="txs"></div>
+</section>
+<section class="tab" id="profile">
+ <div class="me glass"><div class="avatar" id="av"></div><label class="btn sm ghost" style="margin-bottom:12px">📷 <span data-i="pic">Photo</span><input type="file" accept="image/*" hidden onchange="upP(this)"></label><h3 style="font-size:24px" id="pn"></h3><small id="pu"></small>
+  <div class="stats"><div class="stat"><small data-i="mt">Matches</small><b id="sM">0</b></div><div class="stat"><small>Balance</small><b id="sB"></b></div><div class="stat"><small>Phone</small><b id="sP" style="font-size:11px"></b></div></div></div>
+ <div class="card glass"><span class="lbl" data-i="cpw">Change Password</span><input class="field" id="npw" type="password" data-ph="npw" placeholder="New password"><button class="btn sm" style="width:100%" onclick="chPw()" data-i="upd">Update</button></div>
+ <select class="field lgs" onchange="setLang(this.value)"><option value="bn">বাংলা</option><option value="en">English</option></select>
+ <button class="btn ghost" style="width:100%;margin-bottom:10px" onclick="toggleTheme()">Dark / Light</button>
+ <button class="btn red" style="width:100%" onclick="logout()" data-i="out">Logout</button>
+</section>
+</div>
+
+<div id="aapp" hidden>
+ <div class="chips" id="atabs"></div><div id="abody"></div>
+ <button class="btn red" style="width:100%;margin-top:10px" onclick="logout()" data-i="out">Logout</button>
+</div>
+</main>
+<nav id="nv">
+ <button class="on" data-t="home"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg><span data-i="home">Home</span></button>
+ <button data-t="matches"><svg viewBox="0 0 24 24"><path d="M14 4l6 6-9 9H5v-6z"/></svg><span data-i="mym">Matches</span></button>
+ <button data-t="wallet"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3"/><path d="M16 12.5h2"/></svg><span data-i="wal">Wallet</span></button>
+ <button data-t="profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c1-4 4-6 8-6s7 2 8 6"/></svg><span data-i="prof">Profile</span></button>
+</nav>
+</div>
+<div id="lp" class="auth" hidden><div class="box glass"><div class="logo lg0"></div><h1>FF Tournament</h1><p>ভাষা বাছাই করো · Choose language</p>
+<button class="lopt on" id="lo-bn" onclick="pk('bn')"><span>বাংলা</span><i>✓</i></button><button class="lopt" id="lo-en" onclick="pk('en')"><span>English</span><i>✓</i></button>
+<button class="btn" style="width:100%;margin-top:6px" onclick="pc()">Continue · এগিয়ে যাও →</button></div></div>
+<button class="fab" id="fab" onclick="openSup()" aria-label="Support"><svg viewBox="0 0 24 24"><path d="M4 14v-2a8 8 0 0 1 16 0v2"/><rect x="3" y="14" width="4" height="6" rx="2"/><rect x="17" y="14" width="4" height="6" rx="2"/><path d="M20 20c0 1.5-2 2-5 2"/></svg></button>
+<div id="sp" class="auth" hidden onclick="if(event.target===this)this.hidden=true"><div class="box glass"><div class="logo lg0"></div><h1 data-i="supt">Need help?</h1><p data-i="supd">Contact us</p><div id="spb"></div><button class="btn sm ghost" onclick="$('sp').hidden=true">✕ Close</button></div></div>
+<div class="toast glass" id="toast"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+/* ===== SUPABASE CONFIG: Project Settings > API theke URL ar anon key boshao ===== */
+var SB_URL='https://txbmtkxndruywuqyvnea.supabase.co',SB_KEY='sb_publishable_GV5R_fVGbtVgrtaO3l1ing_5RKqIqtv';
+var SB_OK=!/PASTE_/.test(SB_URL+SB_KEY),sb=SB_OK?supabase.createClient(SB_URL,SB_KEY):null;
+var MODES=['All','Solo','Duo','Squad','Clash Squad'],mode='All',wmode='a',pay=0,atab='u',lang=localStorage.getItem('fftl')||'bn',me=null,P=null,si=0,tm,amode='li';
+var D={matches:[],mj:[],rooms:{},banners:[],notice:'',logo:'',pays:[],add:[],wd:[],tx:[],users:[],resets:[],sup:{fb:'',wa:'',tg:''}};
+var ST={pending:'p',approved:'a',rejected:'r'};
+var I={bn:{supt:'সাহায্য দরকার?',supd:'নিচের যেকোনো মাধ্যমে আমাদের সাথে যোগাযোগ করো।',supn:'এখনো কোনো support link দেওয়া হয়নি',forgot:'পাসওয়ার্ড ভুলে গেছো?',backl:'← Login-এ ফিরে যাও',reset:'Reset Request পাঠাও',fphint:'তোমার ফোন নম্বর ও FF UID দাও। Admin যাচাই করে নতুন পাসওয়ার্ড সেট করে তোমাকে জানাবে।',fpinv:'ফোন নম্বর ও FF UID দাও',fpsent:'Request পাঠানো হয়েছে। Admin যাচাই করে নতুন পাসওয়ার্ড জানাবে।',cpw:'পাসওয়ার্ড বদলাও',npw:'নতুন পাসওয়ার্ড',upd:'Update করো',pwok:'পাসওয়ার্ড বদলানো হয়েছে',pwshort:'পাসওয়ার্ড কমপক্ষে ৬ অক্ষর',why:'কেন আমাদের Tournament App সেরা?',w1t:'প্রতিদিন Match',w1d:'Solo, Duo, Squad ও Clash Squad — সব mode-এ নিয়মিত tournament।',w2t:'কম Entry, বড় Prize',w2d:'অল্প entry fee-তে জিতে নাও বড় prize pool।',w3t:'নিরাপদ Wallet',w3d:'Add Money ও Withdraw সব request Admin যাচাই করে approve করে। সব লেনদেনের History এক জায়গায়।',w4t:'সহজ Room Access',w4d:'Match শুরুর ৫ মিনিট আগে Room ID ও Password app-এই পেয়ে যাবে।',w5t:'Fair Play',w5d:'সবার জন্য সমান নিয়ম। নিয়ম ভাঙলে account block করা হয়।',w6t:'বাংলা ও English',w6d:'নিজের ভাষায় app চালাও, শুধু ফোন নম্বর দিয়েই Login।',tag:'খেলো। জিতো। আয় করো।',login:'Login',signup:'Sign Up',name:'নাম',ffuid:'FF UID',phone:'ফোন নম্বর',pass:'পাসওয়ার্ড',upc:'আসন্ন ম্যাচ',mym:'My Matches',cb:'বর্তমান ব্যালেন্স',addm:'Add Money',wdr:'Withdraw',sub:'Submit করো',rq:'আমার Request',hist:'History',mt:'Matches',out:'Logout',home:'Home',wal:'Wallet',prof:'Profile',amt:'Amount (৳)',trx:'TrxID',join:'Join',joined:'Joined ✓',slot:'slot বাকি',wait:'Match শুরুর ৫ মিনিট আগে Room ID ও Password দেওয়া হবে',rid:'Room ID',rpw:'Password',inv:'সব তথ্য ঠিকমতো দাও (ফোন ৬+ অক্ষর, পাসওয়ার্ড ৬+)',ex:'এই নম্বরে আগেই account আছে',wr:'ফোন বা পাসওয়ার্ড ভুল',ban:'Account blocked',lowb:'Balance কম। Add Money করো',min:'কমপক্ষে ৳10 দাও',sent:'Request পাঠানো হয়েছে',sendto:'এই নম্বরে Send Money করো',wnum:'তোমার নম্বর (পেমেন্ট পাবে)',nom:'কোনো match নেই',none:'কিছু নেই',needl:'আগে Login / Sign Up করো',pic:'ছবি বদলাও'},
+en:{supt:'Need help?',supd:'Contact us through any option below.',supn:'No support links added yet',forgot:'Forgot password?',backl:'← Back to Login',reset:'Send Reset Request',fphint:'Enter your phone number and FF UID. Admin will verify and set a new password for you.',fpinv:'Enter phone number and FF UID',fpsent:'Request sent. Admin will verify and share a new password.',cpw:'Change Password',npw:'New password',upd:'Update',pwok:'Password updated',pwshort:'Password must be 6+ characters',why:'Why choose our Tournament App?',w1t:'Daily Matches',w1d:'Regular tournaments in Solo, Duo, Squad and Clash Squad.',w2t:'Low Entry, Big Prize',w2d:'Win big prize pools with a small entry fee.',w3t:'Secure Wallet',w3d:'Every Add Money and Withdraw request is verified by an admin, with full history in one place.',w4t:'Easy Room Access',w4d:'Get Room ID & Password in the app 5 minutes before the match.',w5t:'Fair Play',w5d:'Same rules for everyone. Rule breakers get blocked.',w6t:'Bangla & English',w6d:'Use the app in your language, login with just your phone number.',tag:'Play. Win. Earn.',login:'Login',signup:'Sign Up',name:'Name',ffuid:'FF UID',phone:'Phone number',pass:'Password',upc:'Upcoming',mym:'My Matches',cb:'Current Balance',addm:'Add Money',wdr:'Withdraw',sub:'Submit',rq:'My Requests',hist:'History',mt:'Matches',out:'Logout',home:'Home',wal:'Wallet',prof:'Profile',amt:'Amount (৳)',trx:'TrxID',join:'Join',joined:'Joined ✓',slot:'slots left',wait:'Room ID & Password will be given 5 minutes before the match starts',rid:'Room ID',rpw:'Password',inv:'Fill all fields (phone 6+ chars, password 6+)',ex:'Account already exists',wr:'Wrong phone or password',ban:'Account blocked',lowb:'Low balance. Add money first',min:'Minimum ৳10',sent:'Request sent',sendto:'Send Money to this number',wnum:'Your number (to receive)',nom:'No matches',none:'Nothing here',needl:'Please Login / Sign Up first',pic:'Change photo'}};
+function t(k){return I[lang][k]||I.en[k]||k}
+function $(i){return document.getElementById(i)}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function toast(m){var e=$('toast');e.textContent=m;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(function(){e.classList.remove('on')},2600)}
+function fd(ts){return new Date(ts).toLocaleString('en-GB')}
+function em(e){var m=(e&&e.message)||String(e);if(/Low balance/.test(m))return t('lowb');if(/Match full/.test(m))return 'Full';if(/Already joined/.test(m))return 'Already joined';if(/duplicate key/.test(m)&&/trx/.test(m))return 'TrxID already used';return m}
+function UB(id){return D.users.filter(function(u){return u.id===id})[0]||{nm:'?',ph:''}}
+function img(f,w,ty,cb){var r=new FileReader();r.onload=function(){var i=new Image();i.onload=function(){var s=Math.min(1,w/i.width),c=document.createElement('canvas');c.width=i.width*s;c.height=i.height*s;c.getContext('2d').drawImage(i,0,0,c.width,c.height);cb(c.toDataURL(ty,.82))};i.src=r.result};r.readAsDataURL(f)}
+
+/* ---------- DATA LOAD ---------- */
+function mapP(x){return{id:x.id,nm:x.name,ph:x.phone,uid:x.ff_uid,bal:+x.balance,pic:x.profile_pic,ban:x.is_banned,adm:x.is_admin}}
+async function getP(uid){var r=await sb.from('profiles').select('*').eq('id',uid).single();return r.data?mapP(r.data):null}
+async function load(){
+ if(!SB_OK)return;
+ var uid=P&&P.id,adm=me==='admin';
+ var q=await Promise.all([
+  sb.from('v_matches').select('*').order('start_time'),
+  sb.from('banners').select('*').order('sort_order').order('id'),
+  sb.from('settings').select('*'),
+  sb.from('payment_methods').select('*').order('id')]);
+ D.matches=(q[0].data||[]).map(function(x){return{id:x.id,n:x.name,m:x.mode,map:x.map_name,fee:+x.entry_fee,prize:+x.prize_pool,t:fd(x.start_time),max:x.max_slots,cnt:x.joined_players}});
+ D.banners=q[1].data||[];
+ (q[2].data||[]).forEach(function(s){if(s.key==='notice')D.notice=s.value||'';if(s.key==='logo')D.logo=s.value||'';if(s.key==='support_fb')D.sup.fb=s.value||'';if(s.key==='support_wa')D.sup.wa=s.value||'';if(s.key==='support_tg')D.sup.tg=s.value||''});
+ D.pays=(q[3].data||[]).map(function(p){return{id:p.id,n:p.name,num:p.number}});
+ if(!uid){D.mj=[];D.rooms={};D.add=[];D.wd=[];D.tx=[];D.users=[];D.resets=[];return}
+ var a=[getP(uid),
+  sb.from('match_players').select('match_id').eq('user_id',uid),
+  sb.from('match_rooms').select('*'),
+  sb.from('add_money_requests').select('*').order('id',{ascending:false}),
+  sb.from('withdraw_requests').select('*').order('id',{ascending:false}),
+  sb.from('transactions').select('*').eq('user_id',uid).order('id',{ascending:false})];
+ if(adm){a.push(sb.from('profiles').select('*').order('created_at',{ascending:false}));a.push(sb.from('password_resets').select('*').order('id',{ascending:false}))}
+ var r=await Promise.all(a);
+ if(r[0])P=r[0];
+ D.mj=(r[1].data||[]).map(function(x){return x.match_id});
+ D.rooms={};(r[2].data||[]).forEach(function(x){D.rooms[x.match_id]={room:x.room_id,rp:x.room_password}});
+ D.add=(r[3].data||[]).map(function(x){return{id:x.id,k:'a',u:x.user_id,amt:+x.amount,m:x.method,trx:x.trx_id,st:ST[x.status],d:fd(x.created_at),ts:x.created_at}});
+ D.wd=(r[4].data||[]).map(function(x){return{id:x.id,k:'w',u:x.user_id,amt:+x.amount,m:x.method,num:x.send_number,st:ST[x.status],d:fd(x.created_at),ts:x.created_at}});
+ D.tx=(r[5].data||[]).map(function(x){return{u:x.user_id,a:x.description,v:+x.amount,d:fd(x.created_at)}});
+ D.users=adm?(r[6].data||[]).map(mapP):[];
+ D.resets=adm?(r[7].data||[]).map(function(x){return{id:x.id,u:x.user_id,ph:x.phone,f:x.ff_uid,st:x.status,d:fd(x.created_at)}}):[];
+}
+function refresh(){me==='admin'?radm():ruser()}
+async function run(fn,ok){try{var r=await fn();if(r&&r.error)throw r.error;await load();if(ok)toast(ok);return 1}catch(e){toast(em(e))}finally{refresh()}}
+
+/* ---------- LANG / AUTH ---------- */
+function setLang(l){lang=l;localStorage.setItem('fftl',l);document.documentElement.lang=l;applyLang();boot();am(amode)}
+function applyLang(){document.querySelectorAll('[data-i]').forEach(function(e){e.textContent=t(e.dataset.i)});document.querySelectorAll('[data-ph]').forEach(function(e){e.placeholder=t(e.dataset.ph)});document.querySelectorAll('.lgs').forEach(function(s){s.value=lang});document.querySelectorAll('.lg0').forEach(function(l){l.innerHTML=D.logo?'<img src="'+esc(D.logo)+'" alt="">':'<svg viewBox="0 0 24 24"><path d="M12 3c1 4 5 5 5 10a5 5 0 0 1-10 0c0-2 1-3 2-4 0 2 1 3 2 3 0-3-1-5 1-9z"/></svg>'})}
+function am(m){amode=m;var f=m==='fp';$('sgm').hidden=f;$('apw').hidden=f;$('fpx').hidden=!f;$('fpl').hidden=m!=='li';$('fpb').hidden=!f;$('sg').hidden=m!=='su';$('bli').classList.toggle('on',m==='li');$('bsu').classList.toggle('on',m==='su');$('abt').textContent=t(f?'reset':m==='su'?'signup':'login')}
+function need(m){var s=m===undefined?t('needl'):m,e=$('amsg');e.textContent=s;e.style.display=s?'block':'none';$('auth').hidden=false;am('li')}
+var plc=lang;
+function pk(l){plc=l;$('lo-bn').classList.toggle('on',l==='bn');$('lo-en').classList.toggle('on',l==='en')}
+function pc(){setLang(plc);$('lp').hidden=true}
+async function chPw(){if(!sb||!me)return;var w=$('npw').value;if(w.length<6)return toast(t('pwshort'));var r=await sb.auth.updateUser({password:w});if(r.error)return toast(r.error.message);$('npw').value='';toast(t('pwok'))}
+async function auth(){
+ if(!SB_OK)return toast('Supabase URL & KEY boshao');
+ var p=$('aph').value.replace(/\s/g,''),w=$('apw').value,e=p+'@fft.app',r;
+ if(amode==='fp'){var fu=$('afp').value.trim();if(p.length<6||!fu)return toast(t('fpinv'));
+  try{var rr=await sb.rpc('request_password_reset',{p_phone:p,p_ff_uid:fu});if(rr.error)throw rr.error}catch(x){return toast(em(x))}
+  $('afp').value='';return need(t('fpsent'))}
+ try{
+  if(amode==='su'){var n=$('anm').value.trim();if(!n||p.length<6||w.length<6)return toast(t('inv'));
+   r=await sb.auth.signUp({email:e,password:w,options:{data:{name:n,phone:p,ff_uid:$('afu').value.trim()}}});
+   if(r.error)return toast(/already|registered/i.test(r.error.message)?t('ex'):r.error.message);
+   if(!r.data.session){r=await sb.auth.signInWithPassword({email:e,password:w});if(r.error)return toast(r.error.message)}}
+  else{r=await sb.auth.signInWithPassword({email:e,password:w});if(r.error)return toast(t('wr'))}
+ }catch(x){return toast(em(x))}
+ $('auth').hidden=true;await init();go('home')}
+async function logout(){if(sb)await sb.auth.signOut();me=null;P=null;D.mj=[];D.add=[];D.wd=[];D.tx=[];D.users=[];D.resets=[];$('aph').value=$('apw').value='';boot();go('home')}
+async function init(){
+ if(!SB_OK){boot();return toast('Script-er top e Supabase URL & KEY boshao')}
+ var s=(await sb.auth.getSession()).data.session;me=null;P=null;
+ if(s){var pr=await getP(s.user.id);if(pr&&pr.ban){await sb.auth.signOut();toast(t('ban'))}else if(pr){P=pr;me=pr.adm?'admin':pr.id}}
+ await load();boot()}
+function boot(){
+ var ad=me==='admin',g=!me;$('auth').hidden=true;$('shell').hidden=false;$('uapp').hidden=ad;$('aapp').hidden=!ad;$('nv').hidden=ad;$('fab').hidden=ad;$('hb').hidden=ad||g;$('hl').hidden=!g;$('who').textContent=ad?'ADMIN PANEL':g?'Guest':P.nm;applyLang();refresh()}
+function back(){if(me==='admin'){atab='u';radm()}else go('home')}
+function go(x){$('bk').hidden=x==='home'||me==='admin';document.querySelectorAll('.tab').forEach(function(e){e.classList.toggle('on',e.id===x)});document.querySelectorAll('nav button').forEach(function(b){b.classList.toggle('on',b.dataset.t===x)});window.scrollTo(0,0)}
+document.querySelectorAll('nav button').forEach(function(b){b.onclick=function(){if(!me&&b.dataset.t!=='home')return need();go(b.dataset.t)}});
+function upP(i){if(i.files[0])img(i.files[0],300,'image/jpeg',function(d){run(function(){return sb.rpc('update_profile',{p_name:P.nm,p_ff_uid:P.uid||'',p_pic:d})})})}
+
+/* ---------- USER UI ---------- */
+function mc(x,mine){var p=Math.round(x.cnt/x.max*100),j=D.mj.indexOf(x.id)>-1,r='',rm=D.rooms[x.id];
+ if(mine)r=rm&&rm.room?'<div class="room">'+t('rid')+': <b>'+esc(rm.room)+'</b><br>'+t('rpw')+': <b>'+esc(rm.rp)+'</b></div>':'<div class="room w">⏳ '+t('wait')+'</div>';
+ return '<div class="card glass"><div class="top"><div><h3>'+esc(x.n)+'</h3><div class="tags"><span class="tag">'+esc(x.m)+'</span><span class="tag">'+esc(x.map)+'</span></div></div><div class="prize"><small>Prize Pool</small><b>৳'+x.prize+'</b></div></div><div class="stats"><div class="stat"><small>Entry</small><b>৳'+x.fee+'</b></div><div class="stat"><small>Time</small><b style="font-size:11px">'+esc(x.t)+'</b></div><div class="stat"><small>Slots</small><b>'+x.cnt+'/'+x.max+'</b></div></div><div class="bar"><i style="width:'+p+'%"></i></div><div class="slots"><span>'+(x.max-x.cnt)+' '+t('slot')+'</span><span>'+p+'%</span></div>'+(mine?'':'<button class="btn'+(j?' done':'')+'" style="width:100%" onclick="join('+x.id+')">'+(j?t('joined'):t('join')+' · ৳'+x.fee)+'</button>')+r+'</div>'}
+function ruser(){var u=P||{bal:0,nm:'Guest',ph:'-',uid:'',pic:''};
+ var DEMO=[['🔥 Squad Clash','৳5,000 Prize Pool','#ffb020,#ff5a1f,#c2260c'],['🏆 Solo Headshot Rush','Entry only ৳20','#ff5a1f,#c2260c,#5a0f2e'],['💎 Daily Giveaway','Join & Win Diamonds','#7b2ff7,#c2260c,#ff5a1f'],['⚡ Duo Kalahari War','কাল বিকাল ৫:০০','#0f9b8e,#1b6ca8,#2b2d8f']];
+ $('trk').innerHTML=D.banners.length?D.banners.map(function(b){return '<div class="sl"><img src="'+esc(b.image)+'" alt=""></div>'}).join(''):DEMO.map(function(d){return '<div class="sl" style="background:linear-gradient(135deg,'+d[2]+')"><div>'+d[0]+'<small>'+d[1]+'</small></div></div>'}).join('');
+ si=0;$('trk').style.transform='';clearInterval(tm);var n=$('trk').children.length;$('dots').innerHTML=new Array(n+1).join('<i></i>');function dt(){[].forEach.call($('dots').children,function(e,i){e.className=i===si?'on':''})}dt();tm=setInterval(function(){si=(si+1)%n;$('trk').style.transform='translateX(-'+si*100+'%)';dt()},3800);
+ $('nt').textContent=D.notice;
+ $('modes').innerHTML=MODES.map(function(m){return '<button class="chip'+(m===mode?' on':'')+'" onclick="mode=\''+m+'\';ruser()">'+m+'</button>'}).join('');
+ var l=D.matches.filter(function(x){return mode==='All'||x.m===mode});$('cnt').textContent=l.length;
+ $('list').innerHTML=l.length?l.map(function(x){return mc(x)}).join(''):'<div class="card glass" style="text-align:center;color:var(--muted)">'+t('nom')+'</div>';
+ var mine=D.matches.filter(function(x){return D.mj.indexOf(x.id)>-1});
+ $('mine').innerHTML=mine.length?mine.map(function(x){return mc(x,1)}).join(''):'<div class="card glass" style="text-align:center;color:var(--muted)">'+t('nom')+'</div>';
+ $('balTop').textContent=$('balBig').textContent=$('sB').textContent='৳ '+u.bal;$('sM').textContent=mine.length;$('av').innerHTML=u.pic?'<img src="'+esc(u.pic)+'" alt="">':esc(u.nm.slice(0,2).toUpperCase());$('pn').textContent=u.nm;$('pu').textContent='FF UID: '+(u.uid||'-');$('sP').textContent=u.ph;
+ $('wa').classList.toggle('on',wmode==='a');$('ww').classList.toggle('on',wmode==='w');$('trx').hidden=wmode!=='a';
+ if(pay>=D.pays.length)pay=0;
+ $('pays').innerHTML=D.pays.map(function(p,i){return '<button class="'+(i===pay?'on':'')+'" onclick="pay='+i+';ruser()">'+esc(p.n)+'</button>'}).join('');
+ var pp=D.pays[pay];$('pinfo').innerHTML=pp?(wmode==='a'?t('sendto')+': <b>'+esc(pp.num)+'</b>':t('wnum')+': <b>'+esc(u.ph)+'</b>'):'-';
+ $('trx').placeholder=t('trx');
+ $('rqs').innerHTML=D.add.concat(D.wd).filter(function(r){return r.u===me}).sort(function(a,b){return new Date(b.ts)-new Date(a.ts)}).map(function(r){return '<div class="tx glass"><div>'+(r.k==='a'?'Add':'Withdraw')+' · '+esc(r.m)+'<small>'+esc(r.d)+'</small></div><span>৳'+r.amt+' <span class="st '+r.st+'">'+{p:'Pending',a:'Approved',r:'Rejected'}[r.st]+'</span></span></div>'}).join('')||'<div class="card glass" style="text-align:center;color:var(--muted)">'+t('none')+'</div>';
+ $('txs').innerHTML=D.tx.filter(function(x){return x.u===me}).map(function(x){return '<div class="tx glass"><div>'+esc(x.a)+'<small>'+esc(x.d)+'</small></div><span class="'+(x.v>0?'plus':'minus')+'">'+(x.v>0?'+':'−')+'৳'+Math.abs(x.v)+'</span></div>'}).join('')}
+function join(id){if(!me)return need();if(D.mj.indexOf(id)>-1)return;run(function(){return sb.rpc('join_match',{p_match:id})},'Joined ✓')}
+function wm(m){wmode=m;ruser()}
+async function req(){if(!me)return need();var v=parseInt($('amt').value,10),p=D.pays[pay],trx=$('trx').value.trim(),ok;
+ if(!p||!v||v<10)return toast(t('min'));
+ if(wmode==='a'){if(!trx)return toast(t('trx'));ok=await run(function(){return sb.from('add_money_requests').insert({user_id:P.id,amount:v,method:p.n,trx_id:trx})},t('sent'))}
+ else{if(P.bal<v)return toast(t('lowb'));ok=await run(function(){return sb.rpc('request_withdraw',{p_amount:v,p_method:p.n,p_number:P.ph})},t('sent'))}
+ if(ok)$('amt').value=$('trx').value=''}
+function sl(k,v){v=(v||'').trim();if(!v)return '';
+ if(/^https?:\/\//i.test(v))return v;
+ if(/^(javascript|data|vbscript):/i.test(v))return '';
+ if(k==='wa'){var d=v.replace(/\D/g,'');if(!d)return '';return 'https://wa.me/'+d.replace(/^0/,'880')}
+ if(k==='tg')return 'https://t.me/'+encodeURIComponent(v.replace(/^@/,''));
+ return 'https://facebook.com/'+encodeURIComponent(v.replace(/^\//,''))}
+function openSup(){var L=[['fb','Facebook','📘','#1877f2'],['wa','WhatsApp','💬','#1faa59'],['tg','Telegram','✈️','#229ed9']],h='';
+ L.forEach(function(x){var u=sl(x[0],D.sup[x[0]]);if(u)h+='<a class="sb" style="background:'+x[3]+'" href="'+esc(u)+'" target="_blank" rel="noopener noreferrer"><b>'+x[2]+'</b>'+x[1]+'</a>'});
+ $('spb').innerHTML=h||'<div class="room w" style="margin-bottom:12px">'+t('supn')+'</div>';$('sp').hidden=false}
+function toggleTheme(){var r=document.documentElement,d=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=d?'light':'dark'}
+
+/* ---------- ADMIN ---------- */
+var AT=[['u','Users'],['a','Add Money'],['w','Withdraw'],['m','Matches'],['r','Reset'],['s','Settings']];
+function radm(){$('bk').hidden=atab==='u';$('atabs').innerHTML=AT.map(function(a){return '<button class="chip'+(a[0]===atab?' on':'')+'" onclick="atab=\''+a[0]+'\';radm()">'+a[1]+(a[0]==='a'?' ('+D.add.filter(function(r){return r.st==='p'}).length+')':a[0]==='w'?' ('+D.wd.filter(function(r){return r.st==='p'}).length+')':a[0]==='r'?' ('+D.resets.filter(function(r){return r.st==='pending'}).length+')':'')+'</button>'}).join('');
+ var h='';
+ if(atab==='u')h=D.users.map(function(u){return '<div class="card glass"><div class="row" style="justify-content:flex-start"><div class="logo" style="width:42px;height:42px">'+(u.pic?'<img src="'+esc(u.pic)+'" alt="">':esc(u.nm.slice(0,1)))+'</div><b>'+esc(u.nm)+'</b></div>'+(u.ban?' <span class="st r">BANNED</span>':'')+(u.adm?' <span class="st a">ADMIN</span>':'')+'<br><small>'+esc(u.ph)+' · UID '+esc(u.uid||'-')+'</small><div class="num" style="font-size:24px;color:var(--fire-d)">৳ '+u.bal+'</div><input class="field" id="ub'+u.id+'" type="number" placeholder="Amount" style="margin:8px 0"><div class="g2"><button class="btn sm" onclick="bal(\''+u.id+'\',1)">+ Add</button><button class="btn sm ghost" onclick="bal(\''+u.id+'\',-1)">− Cut</button></div><button class="btn sm ghost" style="margin-top:8px" onclick="ban(\''+u.id+'\','+(u.ban?'false':'true')+')">'+(u.ban?'Unban':'Ban')+'</button></div>'}).join('')||'<div class="card glass">No users</div>';
+ if(atab==='a'||atab==='w'){var L=atab==='a'?D.add:D.wd;h=L.map(function(r){var q=UB(r.u);return '<div class="card glass"><div class="row"><b>'+esc(q.nm)+'</b><span class="st '+r.st+'">'+{p:'Pending',a:'Approved',r:'Rejected'}[r.st]+'</span></div><small>'+esc(q.ph)+' · '+esc(r.d)+'</small><div class="num" style="font-size:26px;color:var(--fire-d)">৳'+r.amt+' · '+esc(r.m)+'</div>'+(r.k==='a'?'<small>TrxID: <b>'+esc(r.trx)+'</b></small>':'<small>Send to: <b>'+esc(r.num)+'</b></small>')+(r.st==='p'?'<div class="g2" style="margin-top:10px"><button class="btn sm done" onclick="dec('+r.id+',\''+r.k+'\',true)">Approve</button><button class="btn sm red" onclick="dec('+r.id+',\''+r.k+'\',false)">Reject</button></div>':'')+'</div>'}).join('')||'<div class="card glass">Empty</div>'}
+ if(atab==='r')h=D.resets.map(function(r){var q=UB(r.u),ok=q.uid&&r.f&&String(q.uid)===String(r.f);return '<div class="card glass"><div class="row"><b>'+esc(q.nm)+'</b><span class="st '+{pending:'p',done:'a',rejected:'r'}[r.st]+'">'+esc(r.st)+'</span></div><small>'+esc(r.ph)+' · '+esc(r.d)+'</small><br><small>FF UID diyeche: <b>'+esc(r.f||'-')+'</b> · Registered: <b>'+esc(q.uid||'-')+'</b> '+(ok?'✅ Match':'⚠️ Mismatch')+'</small>'+(r.st==='pending'?'<input class="field" id="rn'+r.id+'" placeholder="New password (6+)" style="margin:10px 0"><div class="g2"><button class="btn sm done" onclick="rst('+r.id+')">Set Password</button><button class="btn sm red" onclick="rej('+r.id+')">Reject</button></div><small>Password set kore user ke phone/WhatsApp e janiye dao.</small>':'')+'</div>'}).join('')||'<div class="card glass">Kono reset request nai</div>';
+ if(atab==='m')h='<div class="card glass"><input class="field" id="mn" placeholder="Match name"><div class="g2"><select class="field" id="mm">'+MODES.slice(1).map(function(m){return '<option>'+m+'</option>'}).join('')+'</select><input class="field" id="mp" placeholder="Map"></div><div class="g2"><input class="field" id="mf" type="number" placeholder="Entry ৳"><input class="field" id="mz" type="number" placeholder="Prize ৳"></div><div class="g2"><input class="field" id="mx" type="number" placeholder="Max slots"><input class="field" id="mt" type="datetime-local"></div><button class="btn" style="width:100%" onclick="addM()">Add Match</button></div>'+D.matches.map(function(x){var rm=D.rooms[x.id]||{room:'',rp:''};return '<div class="card glass"><b>'+esc(x.n)+'</b><br><small>'+esc(x.m)+' · '+esc(x.t)+' · '+x.cnt+'/'+x.max+' players</small><div class="g2" style="margin-top:10px"><input class="field" id="ri'+x.id+'" placeholder="Room ID" value="'+esc(rm.room)+'"><input class="field" id="rp'+x.id+'" placeholder="Password" value="'+esc(rm.rp)+'"></div><div class="g2"><button class="btn sm" onclick="room('+x.id+')">Save Room</button><button class="btn sm red" onclick="delM('+x.id+')">Delete</button></div></div>'}).join('');
+ if(atab==='s')h='<div class="card glass"><span class="lbl">Header Logo</span><input class="field" type="file" accept="image/*" onchange="upL(this)"><button class="btn sm ghost" onclick="setLogo(\'\')">Remove logo</button></div>'+
+ '<div class="card glass"><span class="lbl">Sliding Banners</span><input class="field" type="file" accept="image/*" onchange="upB(this)">'+D.banners.map(function(b){return '<div class="row" style="margin-bottom:8px"><img src="'+esc(b.image)+'" style="height:50px;border-radius:10px" alt=""><button class="btn sm red" onclick="delB('+b.id+')">✕</button></div>'}).join('')+'</div>'+
+ '<div class="card glass"><span class="lbl">Notice Board</span><textarea class="field" id="sn" rows="2">'+esc(D.notice)+'</textarea><button class="btn sm" onclick="saveN()">Save Notice</button></div>'+
+ '<div class="card glass"><span class="lbl">Payment Options</span>'+D.pays.map(function(p){return '<div class="row" style="margin-bottom:8px"><span>'+esc(p.n)+' · '+esc(p.num)+'</span><button class="btn sm red" onclick="delP('+p.id+')">✕</button></div>'}).join('')+'<div class="g2"><input class="field" id="pn1" placeholder="Name"><input class="field" id="pn2" placeholder="Number"></div><button class="btn sm" onclick="addP()">Add Payment</button></div>'+
+ '<div class="card glass"><span class="lbl">Support Links</span><input class="field" id="sfb" placeholder="Facebook page/profile link" value="'+esc(D.sup.fb)+'"><input class="field" id="swa" placeholder="WhatsApp number (01XXXXXXXXX) ba link" value="'+esc(D.sup.wa)+'"><input class="field" id="stg" placeholder="Telegram @username ba link" value="'+esc(D.sup.tg)+'"><button class="btn sm" onclick="saveS()">Save Support</button></div>'+
+ '<div class="card glass"><span class="lbl">Admin Password</span><small>Supabase Auth diye manage hoy. Admin-er nijer password change korte Supabase Dashboard > Authentication > Users e jao. User-der password reset Reset tab theke hoy.</small></div>';
+ $('abody').innerHTML=h}
+function bal(id,s){var v=parseFloat($('ub'+id).value);if(!v)return;run(function(){return sb.rpc('admin_adjust_balance',{p_user:id,p_amount:v,p_sign:s})})}
+function rst(id){var v=$('rn'+id).value;if(v.length<6)return toast('Password 6+ chars');run(function(){return sb.rpc('admin_reset_password',{p_req:id,p_pass:v})},'Password set hoyeche')}
+function rej(id){run(function(){return sb.from('password_resets').update({status:'rejected'}).eq('id',id)},'Rejected')}
+function ban(id,b){run(function(){return sb.rpc('admin_set_ban',{p_user:id,p_ban:b})})}
+function dec(id,k,ok){run(function(){return sb.rpc(k==='a'?'decide_add_money':'decide_withdraw',{p_req:id,p_approve:ok})})}
+function addM(){var n=$('mn').value.trim(),f=+$('mf').value,z=+$('mz').value,x=+$('mx').value,d=$('mt').value;if(!n||!x||!d)return toast('Fill name, slots, time');
+ run(function(){return sb.from('matches').insert({name:n,mode:$('mm').value,map_name:$('mp').value||'-',entry_fee:f,prize_pool:z,start_time:new Date(d).toISOString(),max_slots:x})},'Match added')}
+function room(id){run(function(){return sb.rpc('admin_set_room',{p_match:id,p_room:$('ri'+id).value.trim(),p_pass:$('rp'+id).value.trim()})},'Room saved')}
+function delM(id){if(!confirm('Delete this match?'))return;run(function(){return sb.from('matches').delete().eq('id',id)})}
+function setLogo(d){run(function(){return sb.from('settings').upsert({key:'logo',value:d})},'Saved').then(applyLang)}
+function upL(i){if(i.files[0])img(i.files[0],200,'image/png',setLogo)}
+function upB(i){if(i.files[0])img(i.files[0],900,'image/jpeg',function(d){run(function(){return sb.from('banners').insert({image:d})})})}
+function delB(id){run(function(){return sb.from('banners').delete().eq('id',id)})}
+function saveS(){run(function(){return sb.from('settings').upsert([{key:'support_fb',value:$('sfb').value.trim()},{key:'support_wa',value:$('swa').value.trim()},{key:'support_tg',value:$('stg').value.trim()}])},'Saved')}
+function saveN(){run(function(){return sb.from('settings').upsert({key:'notice',value:$('sn').value})},'Saved')}
+function addP(){var a=$('pn1').value.trim(),b=$('pn2').value.trim();if(!a||!b)return;run(function(){return sb.from('payment_methods').insert({name:a,number:b})})}
+function delP(id){run(function(){return sb.from('payment_methods').delete().eq('id',id)})}
+
+document.documentElement.lang=lang;am('li');pk(lang);if(!localStorage.getItem('fftl'))$('lp').hidden=false;init();
+</script>
+</body>
+</html>
